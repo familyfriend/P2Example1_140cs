@@ -1,9 +1,7 @@
 .data
-    ival: .word 100
-    jval: .word 200
-    fval: .word 0
-    gval: .word 10 
-    hval: .word 5
+   sum .word 0
+   N: .word 5
+   A: .word 1,2,3,4,5
 
 .text
 
@@ -11,49 +9,50 @@
 
 main: 
 
-# loading all the values 
-    lw $t0, fval 
-    lw $t1, gval 
-    lw $t2, hval 
-    lw $t3, ival 
-    lw $t4, jval 
+    lw $t1, sum 
 
-#creating branch for if statement 
-   # slti - less than comparing but with a unassigned number(10) 
-    slti $t5, $t3, 10
-#$zero is a special register that only has the value 0
-    beq $t5, $zero, false
+# loads the array
+#$t0 is the starting address of the array 
+    la $t0, A
+    lw $t2, N
+    ori $t3, $zero, 0
+    ori $t4, $zero, 1
 
-#the area between the (bne) and (false:) is the true statement part
+# ($t7) and ( $t0) is safe 
+    ori $t7, $t0, 0
+loop:
+#loading the first element to $t7
+    lw $t7, 0($t0)
+    add $t1, $t1, $t7
 
-    add $t0, $t1, $t2
+#to increase the step
+    add $t3, $t3, $t4
 
-#Once false is placed the truth statment ends and the false begin
-#But needs a jump to avoid the programs to continuing from true to false
+#$t7 is the temporary value 
+#sll is shift left logic 
+    sll $t7, $t3, 2
+    add $t7, $t7, $t0
+    bne $t3, $t2, loop
 
-    j exit
-    false: 
 
-    #lui(load upper immedimete) loads the memory address
-        lui $t5, 0xFFFF
-    #applies other 16 bits to the register
-        ori $t5, $t5, 0xFFFF
-     #use xor to create 1's compulment 
-        xor $t2, $t2, 0xFFFF
-    # now we have 32 bits that are all 1'statement
-    addi $t2, $t2, 1
-    add $t0, $t1, $t2
+#without the loop need to repeat and change the offset 
+    #lw $t7, 4($T0)
+    #add $t1, $t1, $t7 
 
-    #Saving the word from the register to memory 
-    sw $t0, fval
 
-    exit: 
-        sw $t0, fval
-        
+
+#These statments 
+    #lui $t0, 0x1001
+    #ori $t0, $t0, 0004
+
+# while loop     
+
+    #Prints out the result
         li $v0, 10
         move $a0, $t0
         syscall
 
+    #Exits out the program 
         li $v0, 10
         syscall
 

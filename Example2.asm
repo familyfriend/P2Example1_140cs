@@ -18,11 +18,12 @@ main:
     lw $t3, ival 
     lw $t4, jval 
 
-#creating branch for if statement 
-   # bne - values in the branch is not equal 
-    bne $t3, $t4, false 
-
-#the area between the (bne) and (false:) is the true statement part
+#creating less than or equal branch for if statement 
+   # slt - Less than ( $t3 < $t4) result will be in register $t5
+    slt $t5, $t3, $t4 
+    beq $t5, $zero, false 
+    
+#the area between the (beq) and (false:) is the true statement part
 
     add $t0, $t1, $t2
 

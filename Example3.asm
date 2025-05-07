@@ -19,8 +19,10 @@ main:
     lw $t4, jval 
 
 #creating branch for if statement 
-   # bne - values in the branch is not equal 
-    bne $t3, $t4, false 
+   # slti - less than comparing but with a unassigned number(10) 
+    slti $t5, $t3, 10
+#$zero is a special register that only has the value 0
+    beq $t5, $zero, false
 
 #the area between the (bne) and (false:) is the true statement part
 
